@@ -8,8 +8,7 @@ class EventManager
 
   def initialize(filename)
     puts "EventManager Initialized."
-    @filename = filename
-    @file = CSV.open(@filename, {:headers => true, :header_converters => :symbol})
+    @file = CSV.open(filename, {:headers => true, :header_converters => :symbol})
   end
 
   def print_names
@@ -84,4 +83,5 @@ class EventManager
 end
 
 manager = EventManager.new("event_attendees.csv")
-manager.output_data("event_attendees_clean.csv")
+#manager.output_data("event_attendees_clean.csv")
+manager.rep_lookup
