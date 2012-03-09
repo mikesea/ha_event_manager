@@ -80,8 +80,47 @@ class EventManager
     end
   end
 
+  def create_form_letters
+    letter = File.open("form_letter.html", "r").read
+    20.times do
+      line = @file.readline
+      letter = letter.gsub("#first_name", line[:first_name])
+      letter = letter.gsub("#last_name", line[:last_name])
+      letter = letter.gsub("#street", line[:street])
+      letter = letter.gsub("#city", line[:city])
+      letter = letter.gsub("#state", line[:state])
+      letter = letter.gsub("#zipcode", line[:zipcode])
+      filename = "output/thanks_#{line[:last_name]}_#{line[:first_name]}.html"
+      output = File.new(filename, "w")
+      output.write(letter)
+    end
+  end
+
+  def rank_times
+    hours = Array.new(24){0}
+    @file.each do |line|
+      #count\
+      hour = line[:regdate].split(" ").last.split(":").first.to_i
+      hours[hour] += 1
+    end
+    hours.each_with_index{|counter,hour| puts "#{hour}\t#{counter}"}
+  end
+
+  def day_stats
+    days = Array.new(7){0}
+    @file.each do |line|
+      date_strip = line[:regdate].split(" ").first
+      date = Date.strptime(date_strip, "%m/%d/%Y")
+      days[date.wday] += 1
+    end
+    days.each_with_index{|counter,day| puts "#{day}\t#{counter}"}
+  end
+
 end
 
 manager = EventManager.new("event_attendees.csv")
 #manager.output_data("event_attendees_clean.csv")
-manager.rep_lookup
+#manager.rep_lookup
+#manager.create_form_letters
+#manager.rank_times
+manager.day_stats
